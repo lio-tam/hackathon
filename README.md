@@ -23,7 +23,7 @@ The [Infineon TLE94112ES](https://www.infineon.com/cms/de/product/power/motor-co
 
 #### Installation of BMI270 library for Arduino
 The [Bosch BMI270](https://www.bosch-sensortec.com/products/motion-sensors/imus/bmi270/) Inertial Measurement Unit is an acceleration sensor and gyroscope, providing the input for the balancing algorithm.
-For this challenge we use a modified version of the Arduino library for this sensor. Please download it from [here]() and add it to your Arduino IDE by navigating to *Sketch > Include Library > Add ZIP library...*.
+For this challenge we use a modified version of the Arduino library for this sensor. Please download it from [here](https://github.com/Infineon/hackathon/releases/download/v1.0.0/Arduino_BMI270_BMM150-wire-patch.zip) and add it to your Arduino IDE by navigating to *Sketch > Include Library > Add ZIP library...*.
 
 #### Cloning this Repository
 Afterwards you can clone this git repo:
@@ -43,7 +43,7 @@ Of course this is only an example to undestand how everything works - doing it b
 * [PSOC™ 6 for Arduino docs](https://github.com/Infineon/arduino-core-psoc6)
 * [Multi-Half-Bridge Arduino library on GitHub](https://github.com/Infineon/arduino-multi-half-bridge)
 * [Multi-Half-Bridge Arduino library docs](https://github.com/Infineon/multi-half-bridge/wiki/Ino-Getting-Started)
-* [BMI270 Arduino Library](TODO)
+* [BMI270 Arduino Library](https://github.com/Infineon/hackathon/releases/download/v1.0.0/Arduino_BMI270_BMM150-wire-patch.zip)
 
 ## Infineon Team
 
