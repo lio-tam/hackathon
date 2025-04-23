@@ -1,6 +1,8 @@
 extern Tle94112Ino controller;
+
 int previousDirectionMotor1 =0; //1 für vorwärts, -1 für rückwärts,0 für gestoppt
 int previousDirectionMotor2 =0;
+
 void motor_pwm(int motor, int speed) {
  int currentDirection = (speed >0) ?1 : (speed <0) ? -1 :0;
 
