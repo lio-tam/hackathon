@@ -15,9 +15,25 @@ float angle = 0.0; // Current filtered angle
 const float I_MAX = 100.0;   
 // timestamp of the previous loop for calculating dt
 unsigned long lastMicros;
+// Emergency stop parameters for a big tilt
+// const float EMERGENCY_ANGLE= 30.0;
+// const float EMERGENCY_TIME = 0.2;
+// float overTiltTimer = 0;
 
 // Tle94112 object for motor controller
 Tle94112Ino controller = Tle94112Ino(3);
+
+// float rampOutput(float rawOutput, float dt) {
+//     static float lastOutput = 0;
+//     const float RAMP_RATE = 100.0; // units of PWM per second
+//     float maxDelta = RAMP_RATE * dt;
+//     float delta    = rawOutput - lastOutput;
+//     if (abs(delta) > maxDelta) {
+//       delta = (delta > 0 ? +1 : -1) * maxDelta;
+//     }
+//     lastOutput += delta;
+//     return lastOutput;
+//   }
 
 void setup() {
     // Initialize pin 5 as output and set it high after a delay
@@ -72,12 +88,14 @@ void setup() {
     }
 
     // Print IMU sample rate
-    Serial.print("Accelerometer sample rate = ");
-    Serial.print(IMU.accelerationSampleRate());
+    Serial.print("Accelerometer sample rate = "); Serial.print(IMU.accelerationSampleRate());
     Serial.println(" Hz");
     Serial.println();
     Serial.println("Acceleration in G's");
     Serial.println("X\tY\tZ");
+
+    // Print Header for the CSV data stream
+    // Serial.println("time,angle,output");
 
     delay(5000); // Delay for 5 second before starting the loop
 }
@@ -89,6 +107,16 @@ void loop() {
         unsigned long now = micros();
         float dt = (now - lastMicros) * 1e-6; // dt in seconds
         lastMicros = now;
+
+        // Emergency cutoff:
+        // if (abs(angle)>EMERGENCY_ANGLE) {
+        //     overTiltTimer += dt;
+        //     if (overTiltTimer>=EMERGENCY_TIME) {
+        //         motor_pwm(1,0); motor_pwm(2,0);
+        //         integral=0; 
+        //         return;
+        //     }
+        // } else overTiltTimer=0;
 
         /*
             1) Read acceleration and gyroscope data
@@ -112,7 +140,7 @@ void loop() {
         */ 
         float error = target_angle - angle;     // Calculate error
         // integral += error;   // Update integral term
-        integral += error * dt;     // Update integral term with time step
+        integral += error * dt;     // Update integral term with time step (dt)
 
         // Constrain the integral term to prevent windup
         // If your motor PWM range is ±255, you might start with I_MAX = 50…200.
@@ -128,15 +156,28 @@ void loop() {
         // Constrain PID output to the range [-255, 255]
         output = constrain(output, -255, 255);
 
+        // Soft-start ramp:
+        // float safeOutput = rampOutput(rawOutput, dt);
+
         /* 
             Adjust motor speed based on PID output
         */ 
         motor_pwm(1, output); // Control motor 1
         motor_pwm(2, output); // Control motor 2
 
+        // Soft Start for the motors
+        // motor_pwm(1, safeOutput);
+        // motor_pwm(2, safeOutput);
+
         // Print angle and PID output to the serial monitor
         Serial.print("Angle: ");    Serial.print(angle);
         Serial.print(" | Output: ");    Serial.println(output);
+
+        // Optional: Stream CSV data for external logging
+        // float timeSec = micros()*1e-6;
+        // Serial.print(timeSec, 3); Serial.print(",");
+        // Serial.print(angle, 2);   Serial.print(",");
+        // Serial.println(output, 1);
 
         // Optional delay to slow down data rate
         delay(10);
