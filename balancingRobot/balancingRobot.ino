@@ -78,8 +78,8 @@ void setup() {
     // Initialize serial communication
     Serial.begin(9600);
     while (!Serial); // Wait for serial connection
-    lastMicros = micros();    // prime the loop timer
     Serial.println("Started");
+    lastMicros = micros();    // prime the loop timer
 
     // Initialize the IMU sensor
     if (!IMU.begin()) {
