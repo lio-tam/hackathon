@@ -6,7 +6,7 @@
 float kp = 30; // Proportional factor
 float ki = 0.0; // Integral factor
 float kd = 1; // Derivative factor
-float target_angle = 0.0; // Target angle
+float angle_should = 0.0; // Target angle
 float previous_error = 0.0; // Previous error for derivative calculation
 float integral = 0.0; // Integral term for PID
 
@@ -93,7 +93,7 @@ void loop() {
 
 
         // PID controller calculations
-        float error = (target_angle - angle); //*(target_angle - angle)*(target_angle - angle); // Calculate error
+        float error = (angle_should - angle); //*(target_angle - angle)*(target_angle - angle); // Calculate error
         integral += error * dt; // Update integral term
 
         // Constrain the integral term to prevent windup
